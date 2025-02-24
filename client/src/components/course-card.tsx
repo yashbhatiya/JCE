@@ -13,44 +13,52 @@ export function CourseCard({ course }: CourseCardProps) {
   const [isFlipped, setIsFlipped] = useState(false);
 
   return (
-    <motion.div
-      className="perspective-1000"
-      whileHover={{ scale: 1.05 }}
-      onClick={() => setIsFlipped(!isFlipped)}
-    >
+    <div className="h-[400px] relative perspective-[1000px]">
       <motion.div
-        className="w-full h-full relative preserve-3d"
-        animate={{ rotateY: isFlipped ? 180 : 0 }}
-        transition={{ duration: 0.6 }}
+        className="relative w-full h-full"
+        style={{
+          transformStyle: "preserve-3d",
+          transform: isFlipped ? "rotateY(180deg)" : "rotateY(0deg)",
+          transition: "transform 0.6s"
+        }}
       >
-        <Card className="absolute w-full h-full backface-hidden">
-          <div className="h-48 overflow-hidden">
+        {/* Front of card */}
+        <Card 
+          className="absolute w-full h-full p-4 cursor-pointer backface-hidden hover:scale-105 transition-transform"
+          onClick={() => setIsFlipped(true)}
+        >
+          <div className="h-48 mb-4">
             <img
               src={course.image}
               alt={course.name}
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover rounded-md"
             />
           </div>
-          <div className="p-4">
-            <h3 className="text-xl font-bold">{course.name}</h3>
-            <p className="text-gray-600">Duration: {course.duration}</p>
+          <div>
+            <h3 className="text-xl font-bold mb-2">{course.name}</h3>
+            <p className="text-muted-foreground">Duration: {course.duration}</p>
           </div>
         </Card>
 
-        <Card className="absolute w-full h-full backface-hidden rotate-y-180 bg-primary text-white">
-          <div className="p-4 flex flex-col h-full justify-between">
+        {/* Back of card */}
+        <Card 
+          className="absolute w-full h-full p-6 cursor-pointer backface-hidden bg-primary text-white"
+          style={{ transform: "rotateY(180deg)" }}
+          onClick={() => setIsFlipped(false)}
+        >
+          <div className="flex flex-col h-full justify-between">
             <div>
-              <h3 className="text-xl font-bold mb-2">{course.name}</h3>
-              <p>{course.description}</p>
+              <h3 className="text-xl font-bold mb-4">{course.name}</h3>
+              <p className="text-gray-100">{course.description}</p>
             </div>
-            <Link href="/contact">
-              <Button className="w-full bg-yellow-400 text-primary hover:bg-yellow-500">
+            <Link href={`/contact?course=${course.id}`}>
+              <Button className="w-full bg-yellow-400 text-primary hover:bg-yellow-500 mt-4">
                 Enroll Now
               </Button>
             </Link>
           </div>
         </Card>
       </motion.div>
-    </motion.div>
+    </div>
   );
 }
